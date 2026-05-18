@@ -1,0 +1,244 @@
+# LISTAS
+categorias = []
+areas = []          
+evaluaciones = []   
+
+
+
+# FUNCIONES
+
+
+# AGREGAR CATEGORÍA
+def agregar_categoria():
+    nombre = input("Nombre de la categoría: ")
+
+    if nombre not in categorias:
+        categorias.append(nombre)
+        print("Categoría agregada.")
+    else:
+        print("La categoría ya existe.")
+
+
+# ELIMINAR CATEGORÍA
+def eliminar_categoria():
+    nombre = input("Categoría a eliminar: ")
+
+    if nombre in categorias:
+
+        # eliminar áreas y evaluaciones relacionadas
+        i = 0
+        while i < len(areas):
+
+            if areas[i][2] == nombre:
+
+                # eliminar evaluaciones del área
+                j = 0
+                while j < len(evaluaciones):
+
+                    if evaluaciones[j][0] == areas[i][0]:
+                        evaluaciones.pop(j)
+                    else:
+                        j += 1
+
+                areas.pop(i)
+
+            else:
+                i += 1
+
+        categorias.remove(nombre)
+        print("Categoría eliminada.")
+
+    else:
+        print("No existe.")
+
+
+# AGREGAR ÁREA
+def agregar_area():
+
+    nombre = input("Nombre del área: ")
+    tipo = input("Tipo (Aula/Taller/Lab/Oficina): ")
+    categoria = input("Categoría: ")
+
+    if categoria not in categorias:
+        print("Primero debes crear la categoría.")
+        return
+
+    areas.append([nombre, tipo, categoria])
+    print("Área agregada.")
+
+
+# MODIFICAR ÁREA
+def modificar_area():
+
+    nombre = input("Área a modificar: ")
+
+    for area in areas:
+
+        if area[0] == nombre:
+
+            area[0] = input("Nuevo nombre: ")
+            area[1] = input("Nuevo tipo: ")
+
+            print("Área modificada.")
+            return
+
+    print("Área no encontrada.")
+
+
+# ELIMINAR ÁREA
+def eliminar_area():
+
+    nombre = input("Área a eliminar: ")
+
+    i = 0
+    while i < len(areas):
+
+        if areas[i][0] == nombre:
+
+            # eliminar evaluaciones
+            j = 0
+            while j < len(evaluaciones):
+
+                if evaluaciones[j][0] == nombre:
+                    evaluaciones.pop(j)
+                else:
+                    j += 1
+
+            areas.pop(i)
+
+            print("Área eliminada.")
+            return
+
+        i += 1
+
+    print("Área no encontrada.")
+
+
+# MOSTRAR ÁREAS
+def mostrar_areas():
+
+    if len(areas) == 0:
+        print("No hay áreas.")
+        return
+
+    for area in areas:
+        print(area[0], "-", area[1], "-", area[2])
+
+
+# EVALUAR ÁREA
+def evaluar_area():
+
+    mostrar_areas()
+
+    nombre = input("Área a evaluar: ")
+
+    existe = False
+
+    for area in areas:
+        if area[0] == nombre:
+            existe = True
+
+    if existe == False:
+        print("Área no encontrada.")
+        return
+
+    preguntas = [
+        "Orden",
+        "Limpieza",
+        "Seguridad",
+        "Disciplina",
+        "Conservación"
+    ]
+
+    suma = 0
+
+    for pregunta in preguntas:
+
+        nota = int(input("Califique " + pregunta + " (1-10): "))
+
+        while nota < 1 or nota > 10:
+            nota = int(input("Ingrese un valor válido (1-10): "))
+
+        suma += nota
+
+    promedio = suma / 5
+
+    evaluaciones.append([nombre, promedio])
+
+    print("Evaluación guardada.")
+    print("Promedio:", promedio)
+
+
+# REPORTE
+def reporte_promedios():
+
+    if len(areas) == 0:
+        print("No hay áreas.")
+        return
+
+    for area in areas:
+
+        suma = 0
+        contador = 0
+
+        for evaluacion in evaluaciones:
+
+            if evaluacion[0] == area[0]:
+                suma += evaluacion[1]
+                contador += 1
+
+        if contador == 0:
+            print(area[0], "→ Sin evaluaciones")
+
+        else:
+            promedio = suma / contador
+            print(area[0], "→ Promedio:", round(promedio, 2))
+
+
+# MENÚ
+
+while True:
+
+    print("\n====== SISTEMA 9S ======")
+    print("1. Agregar categoría")
+    print("2. Eliminar categoría")
+    print("3. Agregar área")
+    print("4. Modificar área")
+    print("5. Eliminar área")
+    print("6. Mostrar áreas")
+    print("7. Evaluar área")
+    print("8. Reporte de promedios")
+    print("9. Salir")
+
+    opcion = input("Seleccione: ")
+
+    if opcion == "1":
+        agregar_categoria()
+
+    elif opcion == "2":
+        eliminar_categoria()
+
+    elif opcion == "3":
+        agregar_area()
+
+    elif opcion == "4":
+        modificar_area()
+
+    elif opcion == "5":
+        eliminar_area()
+
+    elif opcion == "6":
+        mostrar_areas()
+
+    elif opcion == "7":
+        evaluar_area()
+
+    elif opcion == "8":
+        reporte_promedios()
+
+    elif opcion == "9":
+        print("Fin del programa")
+        break
+
+    else:
+        print("Opción inválida")
